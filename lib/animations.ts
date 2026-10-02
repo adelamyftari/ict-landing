@@ -28,16 +28,18 @@ function buildDragonTimeline(root: HTMLElement) {
   gsap.set(sceneState.camera, { z: 7, y: 0 });
 
   // The dragon swims as the page scrolls. sine.inOut: it eases out of the
-  // opening coil and settles slowly into the closing curl.
+  // opening coil and settles slowly into the closing curl. It arrives when the
+  // finale stage is fully in view; the footer then scrolls up over it.
+  const dragonRange = {
+    trigger: root,
+    start: "top top",
+    endTrigger: ".finale-stage",
+    end: "bottom bottom",
+  };
   gsap.to(sceneState.dragon, {
     progress: 1,
     ease: "sine.inOut",
-    scrollTrigger: {
-      trigger: root,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1.8,
-    },
+    scrollTrigger: { ...dragonRange, scrub: 1.8 },
   });
 
   // Very small camera dolly.
@@ -45,12 +47,7 @@ function buildDragonTimeline(root: HTMLElement) {
     z: 6.4,
     y: -0.1,
     ease: "none",
-    scrollTrigger: {
-      trigger: root,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1.2,
-    },
+    scrollTrigger: { ...dragonRange, scrub: 1.2 },
   });
 }
 
@@ -81,11 +78,25 @@ export function setupScrollAnimations(root: HTMLElement) {
         // Keep the composition, skip scroll-driven motion.
         gsap.set(sceneState.dragon, { progress: REDUCED_MOTION_PROGRESS });
         gsap.set(sceneState.camera, { z: 7, y: 0 });
-        gsap.set(".reveal-card", { opacity: 1, y: 0, scale: 1 });
+        gsap.set(".reveal-card, .footer-reveal", { opacity: 1, y: 0, scale: 1 });
         return;
       }
 
       buildDragonTimeline(root);
+
+      // Footer: quiet staggered fade-up as it enters.
+      gsap.fromTo(
+        ".footer-reveal",
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: { trigger: ".site-footer__inner", start: "top 85%", once: true },
+        }
+      );
 
       // Hero copy lifts and fades as the hero leaves the viewport.
       gsap.to(".hero-copy-block", {
