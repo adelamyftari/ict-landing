@@ -72,7 +72,7 @@ export default function OffersSection() {
       >
         <p>€500 every hour</p>
         <p>
-          <span className="nowrap">6PM–12AM</span> ·{" "}
+          <span className="nowrap">7PM–12AM</span> ·{" "}
           <span className="nowrap">Wednesday–Saturday</span>
         </p>
       </OfferCard>

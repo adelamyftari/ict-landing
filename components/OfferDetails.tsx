@@ -126,30 +126,30 @@ export function DragonTreasureDetails({ onClose }: { onClose: () => void }) {
         Play, collect points and turn your play into raffle tickets for the chance to win €500.
       </p>
 
-      <ol className="panel-timeline">
-        <li data-reveal>
-          <span className="panel-timeline__num">01</span>
-          <div>
-            <h4 className="panel-timeline__title">Play</h4>
-            <p>Every day from 6PM to 12AM, collect points while you play.</p>
-          </div>
-        </li>
-        <li data-reveal>
-          <span className="panel-timeline__num">02</span>
-          <div>
-            <h4 className="panel-timeline__title">Collect Tickets</h4>
-            <p>Convert your points into raffle tickets.</p>
-            <p className="panel-rate">1 Point = 4 Raffle Tickets</p>
-          </div>
-        </li>
-        <li data-reveal>
-          <span className="panel-timeline__num">03</span>
-          <div>
-            <h4 className="panel-timeline__title">Win</h4>
-            <p>Tickets collected throughout the week enter the Saturday raffle.</p>
-          </div>
-        </li>
-      </ol>
+      <div className="panel-schedule">
+        <h4 className="panel-heading" data-reveal>
+          Raffle Schedule
+        </h4>
+        <p className="panel-body" data-reveal>
+          The Dragon&rsquo;s Treasure raffle runs from Wednesday to Saturday, from 7PM to 12AM.
+        </p>
+        <p className="panel-body" data-reveal>
+          Players collect points during these hours and can convert them into raffle tickets.
+        </p>
+        <p className="panel-rate" data-reveal>
+          1 Point = 4 Raffle Tickets
+        </p>
+        <p className="panel-body" data-reveal>
+          All tickets collected during the promotional period are entered into the raffle.
+        </p>
+        <p className="panel-body" data-reveal>
+          Winners are announced every hour between 7PM and 12AM.
+        </p>
+        <p className="panel-small" data-reveal>
+          Keep your raffle tickets and check the official draw timing at International Casino
+          Tirana.
+        </p>
+      </div>
 
       <div className="panel-highlight" data-reveal>
         <span className="panel-highlight__big">6 Winners</span>
@@ -157,11 +157,8 @@ export function DragonTreasureDetails({ onClose }: { onClose: () => void }) {
       </div>
 
       <p className="panel-body" data-reveal>
-        Raffle draws take place at selected announced times every Saturday.
-      </p>
-      <p className="panel-small" data-reveal>
-        Keep your raffle tickets and check the official draw schedule at International Casino
-        Tirana.
+        Raffle runs from Wednesday to Saturday, with winner announcements every hour from 7PM
+        to 12AM.
       </p>
 
       <p className="panel-legal" data-reveal>

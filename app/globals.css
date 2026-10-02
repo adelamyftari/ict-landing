@@ -184,16 +184,6 @@ p {
   background: radial-gradient(closest-side, rgba(5, 2, 2, 0.62), rgba(5, 2, 2, 0.3) 55%, transparent);
 }
 
-.hero-eyebrow {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.42em;
-  margin-right: -0.42em;
-  text-transform: uppercase;
-  color: var(--ivory);
-}
-
 .hero-title {
   margin: 10px 0 0;
   padding: 0 0.04em 0.08em;
@@ -202,21 +192,18 @@ p {
   font-size: clamp(72px, 23vw, 90px);
   line-height: 0.85;
   letter-spacing: -0.04em;
-  white-space: nowrap;
+  text-wrap: balance;
+}
+
+/* Gradient per line (clone), so wrapped lines all get the same champagne gold. */
+.hero-title__text {
+  padding-bottom: 0.08em;
   background: var(--gold-text);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-  margin-top: 14px;
-  font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: 0.36em;
-  margin-right: -0.36em;
-  text-transform: uppercase;
-  color: var(--ivory);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .hero-divider {
@@ -496,7 +483,6 @@ p {
 
 /* Numbered steps */
 .panel-steps,
-.panel-timeline,
 .panel-list {
   margin: 0;
   padding: 0;
@@ -515,8 +501,7 @@ p {
   border-bottom: 1px solid rgba(212, 174, 103, 0.14);
 }
 
-.panel-steps__num,
-.panel-timeline__num {
+.panel-steps__num {
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 500;
@@ -613,42 +598,21 @@ p {
   color: var(--muted);
 }
 
-/* Dragon's Treasure timeline */
-.panel-timeline {
-  position: relative;
-  margin-top: 22px;
+/* Dragon's Treasure raffle schedule */
+.panel-schedule {
+  margin: 4px 0 24px;
 }
 
-.panel-timeline li {
-  position: relative;
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  padding-bottom: 20px;
+.panel-schedule .panel-body + .panel-body {
+  margin-top: 10px;
 }
 
-/* Thin gold spine connecting the steps */
-.panel-timeline li:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 12px;
-  top: 32px;
-  bottom: 6px;
-  width: 1px;
-  background: linear-gradient(180deg, rgba(212, 174, 103, 0.6), rgba(212, 174, 103, 0.08));
+.panel-schedule .panel-rate {
+  margin: 14px 0;
 }
 
-.panel-timeline__title {
-  margin: 2px 0 4px;
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gold-warm);
-}
-
-.panel-timeline p {
-  color: var(--muted);
+.panel-schedule .panel-small {
+  margin-top: 14px;
 }
 
 .panel-rate {
@@ -953,7 +917,6 @@ p {
 
 @media (max-width: 360px) {
   :root { --gutter: 18px; }
-  .hero-eyebrow, .hero-subtitle { letter-spacing: 0.28em; margin-right: -0.28em; }
   .offer-card { padding: 34px 24px 28px; }
 }
 
@@ -965,7 +928,6 @@ p {
 
   .hero { padding-bottom: 40px; }
   .hero-title { font-size: clamp(110px, 14vw, 168px); }
-  .hero-eyebrow, .hero-subtitle { font-size: 13px; }
   .hero-lede { font-size: 16px; }
 
   .offers {
