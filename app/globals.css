@@ -1,26 +1,534 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --black: #050202;
+  --burgundy-dark: #160505;
+  --red-deep: #3a0708;
+  --crimson: #7e1015;
+  --red-premium: #a6171d;
+  --gold: #d4ae67;
+  --gold-warm: #e4c27c;
+  --ivory: #f3ede3;
+  --muted: #c8beb2;
+
+  --serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
+
+  --gold-text: linear-gradient(
+    180deg,
+    #fff1c8 0%,
+    #e4c27c 35%,
+    #b98238 70%,
+    #f0d28e 100%
+  );
+
+  --gutter: 24px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--black);
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100svh;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-variant-numeric: lining-nums;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(110, 15, 18, 0.25), transparent 45%),
+    linear-gradient(180deg, #110303 0%, #050202 55%, #100304 100%);
+  background-attachment: fixed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+p {
+  margin: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layering: background → particles/dragon (canvas) → cards → UI text  */
+/* ------------------------------------------------------------------ */
+
+.experience {
+  position: relative;
+  isolation: isolate;
+}
+
+.scene-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scene-layer canvas {
+  display: block;
+}
+
+/* Darkens progressively as the page scrolls (driven by GSAP). */
+.scene-shade {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(180deg, rgba(5, 2, 2, 0.15), rgba(5, 2, 2, 0.45));
+}
+
+.scene-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 120% 90% at 50% 40%,
+    transparent 55%,
+    rgba(5, 2, 2, 0.7) 100%
+  );
+}
+
+.ui-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ------------------------------------------------------------------ */
+/* Header                                                              */
+/* ------------------------------------------------------------------ */
+
+.site-header {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--gutter);
+}
+
+/* The logo PNG has generous transparent padding; crop to the artwork.
+   Percentage margins resolve against width, so the crop scales with it. */
+.site-logo {
+  display: block;
+  width: 200px;
+  aspect-ratio: 1024 / 460;
+  overflow: hidden;
+}
+
+.site-logo__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: -12%;
+  filter: drop-shadow(0 2px 10px rgba(5, 2, 2, 0.7));
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero                                                                */
+/* ------------------------------------------------------------------ */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 var(--gutter) 28px;
+  text-align: center;
+}
+
+.hero-copy-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform, opacity;
+}
+
+/* Soft scrim so the dragon can pass behind the copy without hurting legibility. */
+.hero-copy-block::before {
+  content: "";
+  position: absolute;
+  inset: -18% -22%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(5, 2, 2, 0.62), rgba(5, 2, 2, 0.3) 55%, transparent);
+}
+
+.hero-eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  margin-right: -0.42em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+
+.hero-title {
+  margin: 10px 0 0;
+  padding: 0 0.04em 0.08em;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(72px, 23vw, 90px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  background: var(--gold-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.36em;
+  margin-right: -0.36em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+
+.hero-divider {
+  display: block;
+  width: 1px;
+  height: 30px;
+  margin: 20px 0 16px;
+  background: linear-gradient(180deg, transparent, rgba(212, 174, 103, 0.8));
+}
+
+.hero-lede {
+  max-width: 34ch;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  opacity: 0.85;
+}
+
+.scroll-cue__mouse {
+  position: relative;
+  width: 22px;
+  height: 36px;
+  border: 1px solid rgba(212, 174, 103, 0.65);
+  border-radius: 12px;
+}
+
+.scroll-cue__wheel {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 2px;
+  height: 7px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--gold);
+  animation: wheel 2.2s ease-in-out infinite;
+}
+
+.scroll-cue__chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+@keyframes wheel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(9px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Offer cards                                                         */
+/* ------------------------------------------------------------------ */
+
+.offers {
+  display: grid;
+  gap: 20px;
+  padding: 36px var(--gutter) 0;
+}
+
+.offer-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 30px 34px;
+  overflow: hidden;
+  border: 1px solid rgba(218, 177, 100, 0.65);
+  border-radius: 28px;
+  /* Slightly more translucent than solid glass so the dragon reads through */
+  background: linear-gradient(135deg, rgba(46, 5, 7, 0.72), rgba(12, 3, 4, 0.86));
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 225, 170, 0.08);
+  will-change: transform, opacity;
+}
+
+.offer-card--treasure {
+  background: linear-gradient(135deg, rgba(62, 7, 10, 0.74), rgba(16, 3, 5, 0.88));
+}
+
+/* Subtle red glow in one corner */
+.offer-card__glow {
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 90%;
+  height: 110%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(166, 23, 29, 0.32), transparent);
+}
+
+.offer-card--treasure .offer-card__glow {
+  top: auto;
+  bottom: -50%;
+  right: -25%;
+}
+
+.offer-card__label {
+  position: relative;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+}
+
+.offer-card__value {
+  position: relative;
+  margin: 8px 0 14px -0.04em;
+  padding-bottom: 0.04em;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(92px, 28vw, 118px);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  background: var(--gold-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.offer-card__footer {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.offer-card__details {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ivory);
+}
+
+.arrow-button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid rgba(224, 190, 115, 0.7);
+  border-radius: 50%;
+  background: rgba(15, 4, 4, 0.35);
+  color: var(--gold-warm);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease,
+    background 0.35s ease;
+}
+
+.arrow-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arrow-button:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) {
+  .arrow-button:hover {
+    transform: scale(1.04);
+    background: rgba(58, 7, 8, 0.45);
+    box-shadow: 0 0 24px rgba(212, 174, 103, 0.18);
+  }
+}
+
+.arrow-button:focus-visible,
+.site-logo:focus-visible,
+.scroll-cue:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.finale-stage {
+  height: 46svh;
+  min-height: 320px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Footer                                                              */
+/* ------------------------------------------------------------------ */
+
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px var(--gutter) 36px;
+}
+
+.site-footer__drop {
+  width: 1px;
+  height: 40px;
+  margin-bottom: 40px;
+  background: linear-gradient(180deg, transparent, rgba(212, 174, 103, 0.7));
+}
+
+.site-footer__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(243, 237, 227, 0.65);
+  white-space: nowrap;
+}
+
+.site-footer__rule {
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 174, 103, 0.45));
+}
+
+.site-footer__rule:last-child {
+  background: linear-gradient(90deg, rgba(212, 174, 103, 0.45), transparent);
+}
+
+.site-footer__sep {
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 440px) {
+  .offer-card { padding: 38px 24px 30px; }
+  .offer-card__footer { gap: 10px; }
+  .offer-card__details { font-size: 14px; }
+  .arrow-button { width: 56px; height: 56px; }
+}
+
+@media (max-width: 360px) {
+  :root { --gutter: 18px; }
+  .hero-eyebrow, .hero-subtitle { letter-spacing: 0.28em; margin-right: -0.28em; }
+  .offer-card { padding: 34px 24px 28px; }
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 40px; }
+
+  .site-header { top: 28px; }
+  .site-logo { width: 250px; }
+
+  .hero { padding-bottom: 40px; }
+  .hero-title { font-size: clamp(110px, 14vw, 168px); }
+  .hero-eyebrow, .hero-subtitle { font-size: 13px; }
+  .hero-lede { font-size: 16px; }
+
+  .offers {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-top: 64px;
+    gap: 28px;
+  }
+
+  .offer-card {
+    min-height: 330px;
+    padding: 48px 44px 40px;
+  }
+
+  .offer-card__value { font-size: 132px; }
+}
+
+@media (min-width: 1100px) {
+  /* Cards sit side by side within an editorial measure. */
+  .offers {
+    max-width: 880px;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    padding-top: 80px;
+  }
+
+  .offer-card { padding: 44px 36px 38px; }
+  .offer-card__value { font-size: 120px; }
+  .offer-card__label { min-height: 2.5em; display: flex; align-items: flex-end; }
+  .offer-card__details { font-size: 15px; }
+  /* Narrow columns: arrow moves to the top corner so details keep one line. */
+  .offer-card__footer { position: static; }
+  .arrow-button { position: absolute; top: 40px; right: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue__wheel { animation: none; }
+  .arrow-button { transition: none; }
 }
